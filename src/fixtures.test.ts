@@ -69,7 +69,9 @@ const invalid: Array<[string, string, RegExp]> = [
   ['impossible time', 'a = 24:00:00', /Invalid time of day "24:00:00"/],
   ['bad offset', 'a = 1979-05-27T00:00:00+25:00', /Invalid time zone offset "\+25:00"/],
   ['date without seconds', 'a = 1979-05-27T07:32Z', /Invalid value/],
-  ['lone carriage return', 'a = 1\rb = 2', /expected end of line at 1:6/],
+  ['lone carriage return', 'a = 1\rb = 2', /Unexpected control character U\+000D, expected end of line at 1:6/],
+  ['newline in inline table (CRLF)', 'a = {\r\nb = 1}', /Unexpected end of line, expected a key at 1:6/],
+  ['emoji where a value should be', 'a = 😀', /Unexpected "😀", expected a value at 1:5/],
 ];
 
 describe('valid fixtures', () => {

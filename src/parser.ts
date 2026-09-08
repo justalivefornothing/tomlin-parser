@@ -1,7 +1,7 @@
 import { TomlDateTime } from './datetime.js';
 import { ParseError, type Position } from './errors.js';
 import { parseNumberOrDateTime } from './numbers.js';
-import { Scanner, describe, isBareKeyChar } from './scanner.js';
+import { Scanner, isBareKeyChar } from './scanner.js';
 import { parseString } from './strings.js';
 import { isTable, type TomlArray, type TomlTable, type TomlValue } from './types.js';
 
@@ -197,7 +197,7 @@ class Parser {
     }
     let text = '';
     while (isBareKeyChar(s.peek())) text += s.next();
-    if (text === '') throw s.error(`Unexpected ${describe(ch)}, expected a key`);
+    if (text === '') throw s.unexpected('a key');
     return text;
   }
 
@@ -218,7 +218,7 @@ class Parser {
       return false;
     }
     if (/^[0-9+\-in]$/.test(ch)) return parseNumberOrDateTime(s);
-    throw s.error(`Unexpected ${describe(ch)}, expected a value`);
+    throw s.unexpected('a value');
   }
 
   private array(): TomlArray {
@@ -235,7 +235,7 @@ class Parser {
         continue;
       }
       if (s.peek() === ']') break;
-      throw s.error(`Unexpected ${describe(s.peek())}, expected "," or "]"`);
+      throw s.unexpected('"," or "]"');
     }
     s.skip(1);
     return items;
@@ -270,9 +270,9 @@ class Parser {
       this.keyValue(table, open, []);
       s.skipWhitespace();
       const ch = s.peek();
-      s.skip(ch === ',' || ch === '}' ? 1 : 0);
+      if (ch !== ',' && ch !== '}') throw s.unexpected('"," or "}"');
+      s.skip(1);
       if (ch === '}') return table;
-      if (ch !== ',') throw s.error(`Unexpected ${describe(ch)}, expected "," or "}"`);
     }
   }
 

@@ -93,13 +93,11 @@ export class Scanner {
     this.skipWhitespace();
     this.skipComment();
     if (this.done || this.eatNewline()) return;
-    throw this.error(`Unexpected ${describe(this.peek())}, expected end of line`);
+    throw this.unexpected('end of line');
   }
 
   expect(text: string): void {
-    if (!this.startsWith(text)) {
-      throw this.error(`Unexpected ${describe(this.peek())}, expected "${text}"`);
-    }
+    if (!this.startsWith(text)) throw this.unexpected(`"${text}"`);
     this.skip(text.length);
   }
 
@@ -110,13 +108,19 @@ export class Scanner {
   error(reason: string, at: Position = this.position()): ParseError {
     return new ParseError(reason, at, this.src);
   }
-}
 
-export function describe(ch: string): string {
-  if (ch === '') return 'end of input';
-  if (ch === '\n' || ch === '\r') return 'end of line';
-  if (isControl(ch)) return `control character U+${hex(ch)}`;
-  return `"${ch}"`;
+  /** `Unexpected <what is here>, expected <expected>` at the current position. */
+  unexpected(expected: string): ParseError {
+    return this.error(`Unexpected ${this.describeHere()}, expected ${expected}`);
+  }
+
+  private describeHere(): string {
+    const ch = this.peek();
+    if (ch === '') return 'end of input';
+    if (ch === '\n' || (ch === '\r' && this.peek(1) === '\n')) return 'end of line';
+    if (isControl(ch)) return `control character U+${hex(ch)}`;
+    return `"${String.fromCodePoint(this.src.codePointAt(this.offset)!)}"`;
+  }
 }
 
 function hex(ch: string): string {
