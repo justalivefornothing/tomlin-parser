@@ -230,7 +230,7 @@ for any object made of TOML-representable values.
 
 ```sh
 npm install
-npm test          # vitest: 98 tests across parser, fixtures, Cargo manifest, serializer
+npm test          # vitest: 99 tests across parser, fixtures, Cargo manifest, serializer
 npm run typecheck # tsc over sources and tests
 npm run build     # emits dist/ with .d.ts
 ```

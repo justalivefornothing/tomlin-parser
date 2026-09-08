@@ -10,6 +10,12 @@ import { isTable, type TomlArray, type TomlTable, type TomlValue } from './types
  * Throws `ParseError` (and nothing else) on invalid input.
  */
 export function parse<T = TomlTable>(source: string): T {
+  if (typeof source !== 'string') {
+    // Untyped callers can pass anything; keep the "ParseError only" promise even then.
+    const got =
+      source === null || source === undefined ? String(source) : Array.isArray(source) ? 'an array' : `a ${typeof source}`;
+    throw new ParseError(`Expected a TOML source string, got ${got}`, { offset: 0, line: 1, column: 1 }, '');
+  }
   const parser = new Parser(source);
   try {
     return parser.document() as unknown as T;

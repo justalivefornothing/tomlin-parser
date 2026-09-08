@@ -182,4 +182,12 @@ describe('ParseError', () => {
     const deep = '['.repeat(200_000) + ']'.repeat(200_000);
     expect(() => parse(`a = ${deep}`)).toThrow(ParseError);
   });
+
+  it('is thrown even for non-string input from untyped callers', () => {
+    const loose = parse as unknown as (source: unknown) => unknown;
+    expect(() => loose(123)).toThrow(ParseError);
+    expect(() => loose(null)).toThrow(/Expected a TOML source string, got null at 1:1/);
+    expect(() => loose(['a = 1'])).toThrow(/got an array/);
+    expect(() => loose(undefined)).toThrow(/got undefined/);
+  });
 });
