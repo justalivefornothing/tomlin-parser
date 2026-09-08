@@ -195,11 +195,11 @@ that reads one greedy token and classifies it with a handful of anchored
 regular expressions before checking calendar and clock ranges.
 
 ```
-[a.b]        -> resolve a (implicit), declare b       sealed = { a.b }
-x.y = 1      -> create x under a.b via dotted key     pending = { a.b.x }
-[a.b.x]      -> a.b.x is pending -> sealed now        error: declared twice
-[[srv]]      -> new element pushed, becomes current   tableArrays = { srv }
-srv = 1      -> in the element, so no conflict
+[a.b]        a implied, b declared                     sealed = { a.b }
+x.y = 1      x created under a.b by a dotted key       pending = { a.b.x }
+[[srv]]      pending drains; new element is current    sealed += a.b.x   tableArrays = { srv }
+x = 1        lives in the srv element: no conflict
+[a.b.x]      a.b.x is sealed                           ParseError: Cannot declare table "a.b.x" twice at 5:6
 ```
 
 TOML's redefinition rules are the hard part, and they are enforced without
