@@ -1,0 +1,49 @@
+# A realistic Cargo manifest exercising most of the grammar.
+[package]
+name = "tomlin-demo"
+version = "0.4.1"
+edition = "2021"
+authors = ["Jafn <jafn@example.com>"]
+rust-version = "1.75"
+description = """
+A tiny CLI that pretty-prints \
+TOML files.""" # multi-line basic string with a line-ending backslash
+keywords = ["toml", "cli", 'parser']
+readme = 'README.md'
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+clap.version = "4.5"
+clap.features = ["derive", "wrap_help"]
+"tokio-util" = { version = "0.7", optional = true }
+
+[dev-dependencies]
+assert_cmd = "2"
+
+[features]
+default = []
+async = ["dep:tokio-util"]
+
+[[bin]]
+name = "tomlin"
+path = "src/main.rs"
+
+[[bin]]
+name = "tomlin-fmt"
+path = "src/fmt.rs"
+required-features = ["async"]
+
+[profile.release]
+lto = "thin"
+opt-level = 3
+debug = false
+panic = 'abort'
+
+[workspace.metadata]
+released = 2024-03-01T09:30:00+01:00
+build-day = 2024-03-01
+nightly = 03:00:00

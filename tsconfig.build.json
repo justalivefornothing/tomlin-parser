@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "noEmit": false
+    "noEmit": false,
+    // The library itself touches no Node APIs; keep the published types platform-neutral.
+    "types": []
   },
-  "exclude": ["src/**/*.test.ts", "src/fixtures.ts"]
+  "exclude": ["src/**/*.test.ts"]
 }
