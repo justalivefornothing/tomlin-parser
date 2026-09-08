@@ -1,1 +1,4 @@
-export const VERSION = "0.1.0";
+export { parse } from './parser.js';
+export { ParseError, type Position } from './errors.js';
+export { TomlDateTime, type DateTimeKind } from './datetime.js';
+export { isTable, type TomlValue, type TomlTable, type TomlArray } from './types.js';
