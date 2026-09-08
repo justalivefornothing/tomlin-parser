@@ -1,0 +1,41 @@
+{
+  "name": "tomlin-parser",
+  "version": "0.1.0",
+  "description": "A dependency-free TOML parser and serializer covering tables, arrays of tables, inline tables, dotted keys, all string forms, and dates, with positioned errors.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "toml",
+    "parser",
+    "serializer",
+    "config",
+    "typescript",
+    "zero-dependencies"
+  ],
+  "author": "Jafn",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  }
+}
